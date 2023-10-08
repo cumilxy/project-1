@@ -16,21 +16,33 @@ notes_win.resize(900, 600)
 
 # віджети вікна програми
 list_notes = QListWidget()
+list_notes.setStyleSheet("background-color: aqua; color: black")
 list_notes_label = QLabel('Список заміток')
 
 
+
 button_note_create = QPushButton('Створити замітку') # з'являється вікно з полем "Введіть ім'я замітки"
+button_note_create.setStyleSheet("background-color: yellow; color: black")
 button_note_del = QPushButton('Видалити замітку')
+button_note_del.setStyleSheet("background-color: yellow; color: black")
 button_note_save = QPushButton('Зберегти замітку')
+button_note_save.setStyleSheet("background-color: yellow; color: black")
+button_note_save.setStyleSheet("background-color: yellow; color: purple")
 
 
 field_tag = QLineEdit('')
+field_tag.setStyleSheet("background-color: aqua; color: black")
 field_tag.setPlaceholderText('Введіть тег...')
 field_text = QTextEdit()
+field_text.setStyleSheet("background-color: aqua; color:black")
 button_tag_add = QPushButton('Додати до замітки')
+button_tag_add.setStyleSheet("background-color: orange; color: green")
 button_tag_del = QPushButton('Відкріпити від замітки')
+button_tag_del.setStyleSheet("background-color: orange; color: green")
 button_tag_search = QPushButton('Шукати замітки по тегу')
+button_tag_search.setStyleSheet("background-color: orange; color: green")
 list_tags = QListWidget()
+list_tags.setStyleSheet("background-color: aqua; color: black")
 list_tags_label = QLabel('Список тегів')
 
 
@@ -80,10 +92,28 @@ def add_notes():
         notes[dialog] = {"текст":"","теги":[]}
         list_notes.addItem(dialog)
 
-
+def save_notes():
+    if list_notes.selectedItems():
+        key = list_notes.selectedItems()[0].text()
+        notes[key]['текст']=field_text.toPlainText()
+        with open("f.json", "w") as file:
+            json.dump(notes,file)
+    
+def del_notes():
+     if list_notes.selectedItems():
+        key = list_notes.selectedItems()[0].text()
+        del notes[key]
+        field_text.clear()
+        list_notes.clear()
+        list_notes.addItems(notes)
+        with open("f.json", "w") as file:
+            json.dump(notes,file)
+     
 
 list_notes.itemClicked.connect(show_notes)
 button_note_create.clicked.connect(add_notes)
+button_note_save.clicked.connect(save_notes)
+button_note_del.clicked.connect(del_notes)
 
 with open("f.json", "r") as file:
     notes = json.load(file)
