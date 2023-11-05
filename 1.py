@@ -67,5 +67,39 @@ def showfiles():
     for f in filenames:
         list_things.addItem(f)
 folderrr.clicked.connect(showfiles)
+class Image():
+    def __init__(self):
+        self.dir = None
+        self.image = None
+        self.filename = None
+
+
+    def loadimage(self,dir,filename):
+        self.dir = dir
+        self.filename = filename
+        image_path = os.path.join(dir,filename)
+        self.image = open(image_path)
+
+
+    def showimage(self,path):
+        pole_with_kartinka.hide()
+        pixmapimage = QPixmap(path)
+        w, h = pole_with_kartinka.width(), pole_with_kartinka.height()
+        pixmapimage = pixmapimage.scaled(w, h, Qt.KeepAspectRatio)
+        pole_with_kartinka.setPixmap(pixmapimage)
+        pole_with_kartinka.show()
+
+
+workimage = Image()
+def showChosenImage():
+   if list_things.currentRow() >= 0:
+       filename = list_things.currentItem().text()
+       workimage.loadimage(workdir,filename)
+       image_path = os.path.join(workdir, workimage.filename)
+       workimage.showimage(image_path)
+
+
+list_things.currentRowChanged.connect(showChosenImage)
+
 app.exec_()
 
